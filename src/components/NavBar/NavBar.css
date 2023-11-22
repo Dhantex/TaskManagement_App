@@ -1,0 +1,13 @@
+.NavBar{
+    background: rgb(48, 136, 251);
+    width: 100%;
+    max-height: 50px;
+    min-height:50px;
+    padding: 1rem 0;
+    position: relative;
+}
+
+.Navbar__brand {
+    color: #ffffff;
+    align-items: center;
+  }

@@ -1,0 +1,96 @@
+.Container{
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    background-color: gray;
+    justify-content: center;
+    background: rgb(0, 0, 0) transparent
+}
+
+.Container__Content{
+    width: 100%;
+    height: 90%;
+    min-width: 573.8px;
+    min-height:304px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+}
+
+.Container__Content__Style{
+    font-size: 70px;
+    color: white;
+    font-family: "Helvetica Neue", bold;
+    text-decoration: underline;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Container__Content__Image{
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+@media only screen and (min-width: 500px) {
+    .App-logo {
+        height: 20vmin;
+    }
+
+    .Container__Content__Style{
+        font-size: 40px;
+    }
+
+    .Container__Content__Image{
+        height: 300px;
+    }
+
+}
+
+@media only screen and (max-width: 2560px) {
+    .App-logo {
+        height: 30vmin;
+    }
+
+    .Container__Content__Style{
+        font-size: 400%;
+    }
+
+    .Container__Content__Image{
+        height: 60%;
+    }
+
+    .Container__Content{
+        margin-right: 50% ;
+    }
+
+}

@@ -1,0 +1,23 @@
+.Footer{
+    background-color: rgb(48, 136, 251);
+    color:white;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: 50px;
+    min-height:50px;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.Footer__Link{
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .Footer {
+      font-size: 14px; /* Ajusta el tamaño del texto para pantallas más pequeñas */
+    }
+  }
