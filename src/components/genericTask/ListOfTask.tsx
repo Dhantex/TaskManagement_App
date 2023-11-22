@@ -1,8 +1,9 @@
-import { fetchDataGenericTask } from "../../Request/requestServiceApi"
-import React, { useEffect, useState  } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../hooks/store";
+import { fetchTasks, fetchCategories, fetchStatuses } from "../hooks/useTaskActions";
 import { format } from 'date-fns';
-import './ListOfTask.css'
-
+import './ListOfTask.css';
 import {
     Card,
     Table,
@@ -14,32 +15,22 @@ import {
     Switch
 } from "@tremor/react";
 
-interface ApiResponse {
-    id: number;
-    nameGenericTask: string;
-    description: string;
-    categoryId: number;
-    nameCategory: string;
-    statusTypeId: number;
-    nameStatusType: string;
-    createdDate: string;
-    dueDate: string | null;
-    createdBy: string;
-}
-
 interface StatusTypeRequest {
     "genericTaskId": number,
     "statusTypeId": number
 }
-interface CategoryResponse{
-    "id": number,
-    "name": string
-}
 
 const ListGenericTask: React.FC = () => {
-    const [allData, setAllData] = useState<ApiResponse[]>([]);
+    const dispatch = useDispatch();
+    const tasks = useSelector((state: RootState) => state.tasks.tasks);
+    const categories = useSelector((state: RootState) => state.tasks.categories);
     const [selectedCategory, setSelectedCategory] = useState<number | 0>(0);
-    const [categories, setCategories] = useState<CategoryResponse[]>([]);
+
+    useEffect(() => {
+        fetchTasks(dispatch);
+        fetchCategories(dispatch);
+        fetchStatuses(dispatch);
+    }, [dispatch]);
 
     const handleSwitchChange = async (value: boolean, genericTaskId: number) => {
 
@@ -66,60 +57,31 @@ const ListGenericTask: React.FC = () => {
         } catch (error) {
             console.error("Error:", error);
         } finally {
-            fetchData();
+            fetchTasks(dispatch);
         }
     };
 
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const categoryValue = parseInt(event.target.value, 10);
-        setSelectedCategory(categoryValue);
+        setSelectedCategory(parseInt(event.target.value, 10));
     };
 
     const filterDataByCategory = () => {
-        if (selectedCategory === 0) {
-            return allData;
-        }
-        return allData.filter((item) => item.categoryId === selectedCategory);
+        return selectedCategory === 0 ? tasks : tasks.filter((item) => item.categoryId === selectedCategory);
     };
 
-    const fetchData = () => {
-        fetchDataGenericTask()
-            .then((response) => {
-                setAllData(response);
-            })
-            .catch((error) => {
-                console.error('error getting data:', error);
-            });
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetch('https://localhost:7227/api/v1/Category')
-            .then((response) => response.json())
-            .then((data) => {
-                setCategories(data);
-            })
-            .catch((error) => {
-                console.error('Error al obtener categorías:', error);
-            });
-    }, []);
 
     return (
         <Card className="cardGenericTask">
-
             <div className="category-selector">
                 <label htmlFor="category-select">Select a Category: </label>
                 <select
                     value={selectedCategory}
                     onChange={handleCategoryChange}
-                    >
+                >
                     <option value="0">All</option>
                     {categories.map((category) => (
                         <option key={category.id} value={category.id.toString()}>
-                        {category.name}
+                            {category.name}
                         </option>
                     ))}
                 </select>

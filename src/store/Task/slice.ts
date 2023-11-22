@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 
 export interface GenericTask {
     nameGenericTask: string;
@@ -8,26 +8,52 @@ export interface GenericTask {
     dueDate: string | null;
 }
 
-export interface TaskWithId extends GenericTask {
-    id: number
+export interface StatusType {
+    "genericTaskId": number,
+    "statusTypeId": number
 }
 
-export interface GenericTaskDto extends GenericTask {
+export interface Category{
+    "id": number,
+    "name": string
+  }
+
+export interface TaskWithId extends GenericTask {
+    id: number;
     nameCategory: string;
     nameStatusType: string;
     createdDate: string;
     createdBy: string;
 }
 
-const initialState: TaskWithId[] = (() => {
-	const persistedState = localStorage.getItem("__redux__state__");
-	return persistedState ? JSON.parse(persistedState).GenericTaskDto : [];
-})();
+export interface TaskState {
+    tasks: TaskWithId[];
+    categories: CategoryResponse[];
+    statuses: StatusType[];
+}
 
-export const genericTask = createSlice({
-	name: "Tasks",
-	initialState,
-	reducers: {},
+const initialState: TaskState = {
+    tasks: [] as TaskWithId[],
+    categories: [] as Category[],
+    statuses: [] as StatusType[]
+};
+
+export const genericTaskSlice = createSlice({
+    name: "tasks",
+    initialState,
+    reducers: {
+        setTasks: (state, action: PayloadAction<TaskWithId[]>) => {
+            state.tasks = action.payload;
+        },
+        setCategories: (state, action: PayloadAction<Category[]>) => {
+            state.categories = action.payload;
+        },
+        setStatuses: (state, action: PayloadAction<StatusType[]>) => {
+            state.statuses = action.payload;
+        },
+    },
 });
 
-export default genericTask.reducer;
+export const { setTasks, setCategories, setStatuses } = genericTaskSlice.actions;
+
+export default genericTaskSlice.reducer;
