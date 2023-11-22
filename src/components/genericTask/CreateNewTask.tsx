@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import './CreatenewTask.css'
 
 interface TaskFormProps {
-  updateTaskList: () => void; // Función para actualizar la lista de tareas
+  updateTaskList: () => void;
+}
+
+interface CategoryResponse{
+  "id": number,
+  "name": string
+}
+
+interface StatusType extends CategoryResponse{
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [statuses, setStatuses] = useState<StatusType[]>([]);
   const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>(undefined);
@@ -61,10 +69,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
         throw new Error('Error al agregar la tarea');
       }
 
-      // Actualiza la lista de tareas llamando a la función pasada como prop
+      // Update the task list by calling the function passed as prop
       updateTaskList();
 
-      // Limpia el formulario después de agregar la tarea
+      // Clear the form after adding the task
       setName("");
       setDescription("");
       if (statuses.length > 0) {
@@ -93,7 +101,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
   return (
     <form onSubmit={handleSubmit} className="task-form">
       <div className="form-row">
-        {/* Primera parte del formulario (en la columna izquierda en pantallas grandes) */}
         <div className="form-group">
           <label htmlFor="task-name" className="task-label">Name:</label>
           <input
@@ -119,7 +126,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
         </div>
       </div>
       <div className="form-row">
-        {/* Segunda parte del formulario (en la columna derecha en pantallas grandes) */}
         <div className="form-group">
           <label htmlFor="task-category" className="task-label">Category:</label>
           <select
@@ -166,7 +172,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
           />
         </div>
       </div>
-      {/* Botón de creación de tarea */}
       <button type="submit" className="task-button">Create Task</button>
     </form>
   );

@@ -6,7 +6,7 @@ import {TaskForm} from "../components/genericTask/CreateNewTask"
 export function Home() {
     const [taskListUpdated, setTaskListUpdated] = useState(false);
   
-    // Función para actualizar la lista de tareas
+    // Function to update the task list
     const updateTaskList = () => {
       setTaskListUpdated(!taskListUpdated);
     };

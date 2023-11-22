@@ -1,5 +1,5 @@
 import { fetchDataGenericTask } from "../../Request/requestServiceApi"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState  } from 'react';
 import { format } from 'date-fns';
 import './ListOfTask.css'
 
@@ -31,9 +31,15 @@ interface StatusTypeRequest {
     "genericTaskId": number,
     "statusTypeId": number
 }
+interface CategoryResponse{
+    "id": number,
+    "name": string
+}
 
 const ListGenericTask: React.FC = () => {
-    const [data, setData] = useState<ApiResponse[]>([]);
+    const [allData, setAllData] = useState<ApiResponse[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | 0>(0);
+    const [categories, setCategories] = useState<CategoryResponse[]>([]);
 
     const handleSwitchChange = async (value: boolean, genericTaskId: number) => {
 
@@ -53,7 +59,7 @@ const ListGenericTask: React.FC = () => {
 
             const result = await response;
 
-            if(result.status != 204){
+            if (result.status != 204) {
                 console.log("Error:", result);
             }
 
@@ -64,22 +70,60 @@ const ListGenericTask: React.FC = () => {
         }
     };
 
+    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const categoryValue = parseInt(event.target.value, 10);
+        setSelectedCategory(categoryValue);
+    };
+
+    const filterDataByCategory = () => {
+        if (selectedCategory === 0) {
+            return allData;
+        }
+        return allData.filter((item) => item.categoryId === selectedCategory);
+    };
+
     const fetchData = () => {
         fetchDataGenericTask()
             .then((response) => {
-                setData(response);
+                setAllData(response);
             })
             .catch((error) => {
                 console.error('error getting data:', error);
             });
     };
 
-useEffect(() => {
+    useEffect(() => {
         fetchData();
+    }, []);
+
+    useEffect(() => {
+        fetch('https://localhost:7227/api/v1/Category')
+            .then((response) => response.json())
+            .then((data) => {
+                setCategories(data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener categorías:', error);
+            });
     }, []);
 
     return (
         <Card className="cardGenericTask">
+
+            <div className="category-selector">
+                <label htmlFor="category-select">Select a Category: </label>
+                <select
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    >
+                    <option value="0">All</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id.toString()}>
+                        {category.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <Table className="table-responsive striped-table">
                 <TableHead>
                     <TableRow>
@@ -95,7 +139,7 @@ useEffect(() => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.map((item) => (
+                    {filterDataByCategory().map((item) => (
                         <TableRow key={item.id}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell className="text-left">{item.nameGenericTask}</TableCell>
