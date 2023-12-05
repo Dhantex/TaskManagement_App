@@ -1,3 +1,4 @@
+//store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import genericTaskReducer from "../../store/Task/slice";
 

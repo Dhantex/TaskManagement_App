@@ -1,9 +1,12 @@
+//ListOfTask.tsx
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../hooks/store";
 import { fetchTasks, fetchCategories, fetchStatuses } from "../hooks/useTaskActions";
 import { format } from 'date-fns';
 import './ListOfTask.css';
+import {UPDATE_STATUS_ID,API_BASE_URL} from '../../config'
+
 import {
     Card,
     Table,
@@ -40,7 +43,7 @@ const ListGenericTask: React.FC = () => {
         };
 
         try {
-            const response = await fetch("https://localhost:7227/api/v1/GenericTask/UpdateStatusId", {
+            const response = await fetch(`${API_BASE_URL}${UPDATE_STATUS_ID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

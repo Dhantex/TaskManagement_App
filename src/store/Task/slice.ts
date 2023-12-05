@@ -1,3 +1,4 @@
+//slice.ts
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 
 export interface GenericTask {
@@ -8,9 +9,19 @@ export interface GenericTask {
     dueDate: string | null;
 }
 
-export interface StatusType {
+export interface GenericTaskStatusType {
     "genericTaskId": number,
     "statusTypeId": number
+}
+
+export interface GenericTaskCategory {
+    "genericTaskId": number,
+    "statusTypeId": number
+}
+
+export interface StatusType {
+    "id": number,
+    "name": string
 }
 
 export interface Category{
@@ -28,14 +39,18 @@ export interface TaskWithId extends GenericTask {
 
 export interface TaskState {
     tasks: TaskWithId[];
-    categories: CategoryResponse[];
+    categories: Category[];
     statuses: StatusType[];
+    GenericTaskCategories: GenericTaskCategory [];
+    GenericTaskStatusTypes: GenericTaskStatusType[];
 }
 
 const initialState: TaskState = {
     tasks: [] as TaskWithId[],
     categories: [] as Category[],
-    statuses: [] as StatusType[]
+    statuses: [] as StatusType[],
+    GenericTaskCategories: [] as GenericTaskCategory[],
+    GenericTaskStatusTypes: [] as GenericTaskStatusType[],
 };
 
 export const genericTaskSlice = createSlice({

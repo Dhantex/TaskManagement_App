@@ -1,49 +1,29 @@
+//CreateNewRask.tsx
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCategories, fetchStatuses } from '../hooks/useTaskActions';
+import { RootState } from '../hooks/store'
 import './CreatenewTask.css'
+import {UPDATE_STATUS_ID,API_BASE_URL} from '../../config'
 
 interface TaskFormProps {
   updateTaskList: () => void;
 }
 
-interface CategoryResponse{
-  "id": number,
-  "name": string
-}
-
-interface StatusType extends CategoryResponse{
-}
-
 const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
+  const dispatch = useDispatch();
+  const { categories, statuses } = useSelector((state: RootState) => state.tasks);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
-  const [statuses, setStatuses] = useState<StatusType[]>([]);
   const [selectedStatusId, setSelectedStatusId] = useState<number | undefined>(undefined);
 
-
-
   useEffect(() => {
-    fetch('https://localhost:7227/api/v1/Category')
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
-      })
-      .catch((error) => {
-        console.error('Error al obtener categorías:', error);
-      });
-
-    //get data status type
-    fetch('https://localhost:7227/api/v1/StatusType')
-      .then((response) => response.json())
-      .then((data) => {
-        setStatuses(data);
-      })
-      .catch((error) => {
-        console.error('Error al obtener estados:', error);
-      });
-  }, []);
+    fetchCategories(dispatch);
+    fetchStatuses(dispatch);
+  }, [dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +37,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
     };
 
     try {
-      const response = await fetch('https://localhost:7227/api/v1/GenericTask', {
+      const response = await fetch(`${API_BASE_URL}${UPDATE_STATUS_ID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +46,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al agregar la tarea');
+        throw new Error('Error adding task');
       }
 
       // Update the task list by calling the function passed as prop
@@ -87,7 +67,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ updateTaskList }) => {
       }
       setDueDate(calculateDueDate());
     } catch (error) {
-      console.error("Error al agregar tarea:", error);
+      console.error("Error adding task:", error);
     }
 
   };
